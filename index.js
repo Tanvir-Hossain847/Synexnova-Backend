@@ -32,6 +32,7 @@ async function run() {
     const userCollection = syne.collection("users");
     const emailsCollection = syne.collection("emails");
     const statisticsCollection = syne.collection("statistics");
+    const messagesCollection = syne.collection("messages");
 
     // ─── SERVICES ───────────────────────────────────────────────
     app.get("/services", async (req, res) => {
@@ -420,6 +421,58 @@ async function run() {
         res.status(200).send(result);
       } catch (error) {
         res.status(500).send({ message: "Failed to delete statistic", error });
+      }
+    });
+
+    // ─── MESSAGES ────────────────────────────────────────────────
+    app.get("/messages", async (req, res) => {
+      try {
+        const result = await messagesCollection.find().toArray();
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch messages", error });
+      }
+    });
+
+    app.get("/messages/:id", async (req, res) => {
+      try {
+        const result = await messagesCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!result) return res.status(404).send({ message: "Message not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch message", error });
+      }
+    });
+
+    app.post("/messages", async (req, res) => {
+      try {
+        const result = await messagesCollection.insertOne(req.body);
+        res.status(201).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to send message", error });
+      }
+    });
+
+    app.patch("/messages/:id", async (req, res) => {
+      try {
+        const result = await messagesCollection.updateOne(
+          { _id: new ObjectId(req.params.id) },
+          { $set: req.body }
+        );
+        if (result.matchedCount === 0) return res.status(404).send({ message: "Message not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to update message", error });
+      }
+    });
+
+    app.delete("/messages/:id", async (req, res) => {
+      try {
+        const result = await messagesCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+        if (result.deletedCount === 0) return res.status(404).send({ message: "Message not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to delete message", error });
       }
     });
 
