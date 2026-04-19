@@ -33,6 +33,10 @@ async function run() {
     const emailsCollection = syne.collection("emails");
     const statisticsCollection = syne.collection("statistics");
     const messagesCollection = syne.collection("messages");
+    const featuresCollection = syne.collection("features");
+    const blogsCollection = syne.collection("blogs");
+    const countriesCollection = syne.collection("countries");
+    const faqCollection = syne.collection("faq");
 
     // ─── SERVICES ───────────────────────────────────────────────
     app.get("/services", async (req, res) => {
@@ -473,6 +477,175 @@ async function run() {
         res.status(200).send(result);
       } catch (error) {
         res.status(500).send({ message: "Failed to delete message", error });
+      }
+    });
+
+    // ─── FEATURES ────────────────────────────────────────────────
+    app.get("/features", async (req, res) => {
+      try {
+        const result = await featuresCollection.find().toArray();
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch features", error });
+      }
+    });
+
+    app.get("/features/:id", async (req, res) => {
+      try {
+        const result = await featuresCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!result) return res.status(404).send({ message: "Feature not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch feature", error });
+      }
+    });
+
+    app.post("/features", async (req, res) => {
+      try {
+        const result = await featuresCollection.insertOne(req.body);
+        res.status(201).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to create feature", error });
+      }
+    });
+
+    app.delete("/features/:id", async (req, res) => {
+      try {
+        const result = await featuresCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+        if (result.deletedCount === 0) return res.status(404).send({ message: "Feature not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to delete feature", error });
+      }
+    });
+
+    // ─── BLOGS ───────────────────────────────────────────────────
+    app.get("/blogs", async (req, res) => {
+      try {
+        const result = await blogsCollection.find().toArray();
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch blogs", error });
+      }
+    });
+
+    app.get("/blogs/:id", async (req, res) => {
+      try {
+        const result = await blogsCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!result) return res.status(404).send({ message: "Blog not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch blog", error });
+      }
+    });
+
+    app.post("/blogs", async (req, res) => {
+      try {
+        const result = await blogsCollection.insertOne(req.body);
+        res.status(201).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to create blog", error });
+      }
+    });
+
+    app.delete("/blogs/:id", async (req, res) => {
+      try {
+        const result = await blogsCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+        if (result.deletedCount === 0) return res.status(404).send({ message: "Blog not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to delete blog", error });
+      }
+    });
+
+    // ─── COUNTRIES ───────────────────────────────────────────────
+    app.get("/countries", async (req, res) => {
+      try {
+        const result = await countriesCollection.find().toArray();
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch countries", error });
+      }
+    });
+
+    app.get("/countries/:id", async (req, res) => {
+      try {
+        const result = await countriesCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!result) return res.status(404).send({ message: "Country not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch country", error });
+      }
+    });
+
+    app.post("/countries", async (req, res) => {
+      try {
+        const result = await countriesCollection.insertOne(req.body);
+        res.status(201).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to create country", error });
+      }
+    });
+
+    app.delete("/countries/:id", async (req, res) => {
+      try {
+        const result = await countriesCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+        if (result.deletedCount === 0) return res.status(404).send({ message: "Country not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to delete country", error });
+      }
+    });
+
+    // ─── FAQ ─────────────────────────────────────────────────────
+    app.get("/faq", async (req, res) => {
+      try {
+        const result = await faqCollection.find().toArray();
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch faqs", error });
+      }
+    });
+
+    app.get("/faq/:id", async (req, res) => {
+      try {
+        const result = await faqCollection.findOne({ _id: new ObjectId(req.params.id) });
+        if (!result) return res.status(404).send({ message: "FAQ not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to fetch faq", error });
+      }
+    });
+
+    app.post("/faq", async (req, res) => {
+      try {
+        const result = await faqCollection.insertOne(req.body);
+        res.status(201).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to create faq", error });
+      }
+    });
+
+    app.patch("/faq/:id", async (req, res) => {
+      try {
+        const result = await faqCollection.updateOne(
+          { _id: new ObjectId(req.params.id) },
+          { $set: req.body }
+        );
+        if (result.matchedCount === 0) return res.status(404).send({ message: "FAQ not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to update faq", error });
+      }
+    });
+
+    app.delete("/faq/:id", async (req, res) => {
+      try {
+        const result = await faqCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+        if (result.deletedCount === 0) return res.status(404).send({ message: "FAQ not found" });
+        res.status(200).send(result);
+      } catch (error) {
+        res.status(500).send({ message: "Failed to delete faq", error });
       }
     });
 
