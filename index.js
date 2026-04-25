@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 
 async function run() {
   try {
+    await client.connect();
     const syne = client.db("synexnova");
     const servicesCollection = syne.collection("services");
     const softwareCollection = syne.collection("software");
@@ -649,7 +650,7 @@ async function run() {
       }
     });
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // await client.close();
